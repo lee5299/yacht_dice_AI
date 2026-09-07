@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Yacht Dice - Sound & Motion Support</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 오디오 태그: sound/dice_sound.mp3 파일 연결 -->
+<audio id="dice-sound" src="sound/dice_sound.mp3" preload="auto"></audio>
+
+<div class="overlay-screen" id="pause-screen" style="display: none; z-index: 500;">
+    <div class="modal-card-custom">
+        <h1>PAUSED</h1>
+        <p style="margin-bottom: 20px; color: #666;">게임을 일시정지했습니다.</p>
+        <button class="diff-btn" style="text-align:center;" onclick="togglePause(false)">▶️ 계속하기</button>
+    </div>
+</div>
+
+<div class="overlay-screen" id="diff-screen">
+    <div class="modal-card-custom">
+        <h1>YACHT DICE</h1>
+        <p style="margin-bottom: 20px; color: #666;">AI 난이도를 선택하세요</p>
+        <button class="diff-btn" onclick="selectDifficulty('easy')">🟢 초급 (Easy)</button>
+        <button class="diff-btn" onclick="selectDifficulty('medium')">🟡 중급 (Medium)</button>
+        <button class="diff-btn" onclick="selectDifficulty('hard')">🔴 고급 (Hard)</button>
+    </div>
+</div>
+
+<div class="overlay-screen" id="skill-screen" style="display: none;">
+    <div class="modal-card-custom">
+        <h1>SPECIAL SKILL</h1>
+        <p style="margin-bottom: 15px; color: #666;">사용할 특수능력 1개를 고르세요 (무작위 3개)</p>
+        <div id="skill-options-container"></div>
+    </div>
+</div>
+
+<div class="game-container">
+    <div class="score-sheet">
+        <div class="sheet-header">
+            <div class="turn-box">Turn <span id="turn-text">1/12</span></div>
+            <div class="player-head"><div class="avatar p1">P</div></div>
+            <div class="player-head"><div class="avatar ai">AI</div></div>
+        </div>
+
+        <div class="sheet-body">
+            <div class="row cat-title">Categories</div>
+            <div class="row"><div class="cell-name">⚀ Aces</div><div class="cell-score p1-col" id="p1-aces"></div><div class="cell-score ai-col" id="ai-aces"></div></div>
+            <div class="row"><div class="cell-name">⚁ Deuces</div><div class="cell-score p1-col" id="p1-deuces"></div><div class="cell-score ai-col" id="ai-deuces"></div></div>
+            <div class="row"><div class="cell-name">⚂ Threes</div><div class="cell-score p1-col" id="p1-threes"></div><div class="cell-score ai-col" id="ai-threes"></div></div>
+            <div class="row"><div class="cell-name">⚃ Fours</div><div class="cell-score p1-col" id="p1-fours"></div><div class="cell-score ai-col" id="ai-fours"></div></div>
+            <div class="row"><div class="cell-name">⚄ Fives</div><div class="cell-score p1-col" id="p1-fives"></div><div class="cell-score ai-col" id="ai-fives"></div></div>
+            <div class="row"><div class="cell-name">⚅ Sixes</div><div class="cell-score p1-col" id="p1-sixes"></div><div class="cell-score ai-col" id="ai-sixes"></div></div>
+            
+            <div class="row subtotal-row">
+                <div class="cell-name" style="font-size:0.7rem;">Subtotal<br><span style="font-weight:normal; font-size:0.6rem;">+35 Bonus</span></div>
+                <div class="cell-score p1-col subtotal-cell" id="p1-subtotal"><span class="subtotal-val">0/63</span></div>
+                <div class="cell-score ai-col subtotal-cell" id="ai-subtotal"><span class="subtotal-val">0/63</span></div>
+            </div>
+            <div class="row notice-row" id="bonus-notice-text">Bonus if Upper categories exceed goal</div>
+
+            <div class="row"><div class="cell-name" id="label-choice">Choice</div><div class="cell-score p1-col" id="p1-choice"></div><div class="cell-score ai-col" id="ai-choice"></div></div>
+            <div class="row"><div class="cell-name" id="label-fourKind">4 of a Kind</div><div class="cell-score p1-col" id="p1-fourKind"></div><div class="cell-score ai-col" id="ai-fourKind"></div></div>
+            <div class="row"><div class="cell-name" id="label-fullHouse">Full House</div><div class="cell-score p1-col" id="p1-fullHouse"></div><div class="cell-score ai-col" id="ai-fullHouse"></div></div>
+            <div class="row"><div class="cell-name" id="label-sStraight">S. Straight</div><div class="cell-score p1-col" id="p1-sStraight"></div><div class="cell-score ai-col" id="ai-sStraight"></div></div>
+            <div class="row"><div class="cell-name" id="label-lStraight">L. Straight</div><div class="cell-score p1-col" id="p1-lStraight"></div><div class="cell-score ai-col" id="ai-lStraight"></div></div>
+            <div class="row"><div class="cell-name" id="label-yacht">Yacht</div><div class="cell-score p1-col" id="p1-yacht"></div><div class="cell-score ai-col" id="ai-yacht"></div></div>
+
+            <div class="row total-row">
+                <div class="cell-name">Total</div>
+                <div class="cell-score p1-col" id="p1-total">0</div>
+                <div class="cell-score ai-col" id="ai-total">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="board-area">
+        <div class="guide-panel">
+            <div class="guide-title">📖 규칙 및 조작법</div>
+            <div class="guide-content">
+                • <b>조작:</b> [ROLL] 버튼 또는 [Spacebar] / 주사위 클릭 고정 / 점수판 선택<br>
+                • <b>승리 조건:</b> 제한 시간 내 AI보다 높은 점수 획득 | <b>일시정지:</b> [⏸️ 일시정지] 클릭
+            </div>
+        </div>
+
+        <div class="top-info">
+            <div style="display:flex; gap:8px;">
+                <div class="skill-badge p1-badge" id="p1-skill-info">P: 없음</div>
+                <div class="skill-badge ai-badge" id="ai-skill-info">AI: 없음</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <!-- 소리 및 효과 토글 버튼 -->
+                <button class="pause-btn" id="sound-toggle-btn" onclick="toggleSound()">🔊 Sound On</button>
+                <button class="pause-btn" id="motion-toggle-btn" onclick="toggleMotion()">✨ 효과 On</button>
+                <button class="pause-btn" onclick="openHistoryModal()">📊 기록 보기</button>
+                <button class="pause-btn" onclick="togglePause(true)">⏸️ 일시정지</button>
+                <span id="timer-text" class="timer-badge">⏱️ 30s</span>
+                <span id="rolls-left-text">🎲 3 left</span>
+            </div>
+        </div>
+
+        <div class="dice-tray">
+            <div class="dice-container" id="dice-container"></div>
+        </div>
+
+        <div class="controls-bottom">
+            <button class="reset-btn" onclick="resetGame()">⚙️ 처음으로</button>
+            <button class="action-btn" id="skill-use-btn" style="display:none;" onclick="useActiveSkill()">스킬 사용</button>
+            <button class="roll-btn" id="roll-btn" onclick="playerRoll()">ROLL</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="history-modal" style="display: none; z-index: 600;">
+    <div class="modal-card-custom" style="max-width: 550px; width: 95%;">
+        <h1>📋 난이도별 플레이 기록 (최대 10회)</h1>
+        <div style="display: flex; gap: 8px; margin-bottom: 15px; justify-content: center;">
+            <button class="diff-btn tab-btn active" data-diff="easy" onclick="renderHistoryTable('easy')">Easy</button>
+            <button class="diff-btn tab-btn" data-diff="medium" onclick="renderHistoryTable('medium')">Medium</button>
+            <button class="diff-btn tab-btn" data-diff="hard" onclick="renderHistoryTable('hard')">Hard</button>
+        </div>
+        <div style="max-height: 250px; overflow-y: auto; background: #fff; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center;">
+                <thead style="background: #eee; position: sticky; top: 0;">
+                    <tr>
+                        <th style="padding: 6px; width: 35px;">#</th>
+                        <th>점수 (P vs AI)</th>
+                        <th>결과</th>
+                        <th>원인/비고</th>
+                        <th>일시</th>
+                    </tr>
+                </thead>
+                <tbody id="history-tbody"></tbody>
+            </table>
+        </div>
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+            <button class="pause-btn" style="background:#dc2626;" onclick="clearCurrentHistoryTab()">🗑️ 현재 탭 기록 삭제</button>
+            <button class="diff-btn" style="width: auto; padding: 6px 20px;" onclick="closeHistoryModal()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="result-modal">
+    <div class="modal-card">
+        <h2 id="modal-title" style="margin-bottom: 10px;">결과</h2>
+        <p id="modal-desc" style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.5;"></p>
+        <button class="roll-btn" onclick="closeModal(); resetGame();">다시 하기</button>
+    </div>
+</div>
+
+<script>
+    function openHistoryModal() {
+        document.getElementById('history-modal').style.display = 'flex';
+        renderHistoryTable(typeof selectedDifficulty !== 'undefined' ? selectedDifficulty : 'medium');
+    }
+    function closeHistoryModal() {
+        document.getElementById('history-modal').style.display = 'none';
+    }
+    function clearCurrentHistoryTab() {
+        const activeTab = document.querySelector('.tab-btn.active');
+        if (activeTab) clearHistory(activeTab.getAttribute('data-diff'));
+    }
+</script>
+<script src="script.js"></script>
+</body>
+</html>
