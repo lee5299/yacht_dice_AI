@@ -1,9 +1,45 @@
 {
   "version": 2,
-  "exportedAt": "2026-09-08T12:54:32.276Z",
+  "exportedAt": "2026-09-08T13:33:42.730Z",
   "history": {
     "version": 2,
     "easy": [
+      {
+        "id": 1788873000686,
+        "date": "9. 8. 오후 10:10",
+        "difficulty": "easy",
+        "p1Score": 65,
+        "aiScore": 116,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788872946502,
+        "date": "9. 8. 오후 10:09",
+        "difficulty": "easy",
+        "p1Score": 65,
+        "aiScore": 62,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788872890756,
+        "date": "9. 8. 오후 10:08",
+        "difficulty": "easy",
+        "p1Score": 33,
+        "aiScore": 85,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788872836173,
+        "date": "9. 8. 오후 10:07",
+        "difficulty": "easy",
+        "p1Score": 27,
+        "aiScore": 76,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
       {
         "id": 1788871122714,
         "date": "9. 8. 오후 09:38",
@@ -180,6 +216,78 @@
     ],
     "medium": [
       {
+        "id": 1788873577414,
+        "date": "9. 8. 오후 10:19",
+        "difficulty": "medium",
+        "p1Score": 207,
+        "aiScore": 60,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788873427699,
+        "date": "9. 8. 오후 10:17",
+        "difficulty": "medium",
+        "p1Score": 35,
+        "aiScore": 168,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873378033,
+        "date": "9. 8. 오후 10:16",
+        "difficulty": "medium",
+        "p1Score": 32,
+        "aiScore": 114,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873321441,
+        "date": "9. 8. 오후 10:15",
+        "difficulty": "medium",
+        "p1Score": 32,
+        "aiScore": 109,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873273081,
+        "date": "9. 8. 오후 10:14",
+        "difficulty": "medium",
+        "p1Score": 25,
+        "aiScore": 100,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873216220,
+        "date": "9. 8. 오후 10:13",
+        "difficulty": "medium",
+        "p1Score": 98,
+        "aiScore": 133,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873130198,
+        "date": "9. 8. 오후 10:12",
+        "difficulty": "medium",
+        "p1Score": 54,
+        "aiScore": 155,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873075996,
+        "date": "9. 8. 오후 10:11",
+        "difficulty": "medium",
+        "p1Score": 67,
+        "aiScore": 148,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
         "id": 1788872064333,
         "date": "9. 8. 오후 09:54",
         "difficulty": "medium",
@@ -319,17 +427,45 @@
         "aiScore": 94,
         "result": "패",
         "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
-      },
-      {
-        "id": 1788778398690,
-        "date": "9. 7. 오후 07:53",
-        "p1Score": 219,
-        "aiScore": 96,
-        "result": "승",
-        "failReason": "-"
       }
     ],
     "hard": [
+      {
+        "id": 1788874422363,
+        "date": "9. 8. 오후 10:33",
+        "difficulty": "hard",
+        "p1Score": 0,
+        "aiScore": 0,
+        "result": "패",
+        "failReason": "제한시간 30초 초과"
+      },
+      {
+        "id": 1788874091521,
+        "date": "9. 8. 오후 10:28",
+        "difficulty": "hard",
+        "p1Score": 31,
+        "aiScore": 119,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788874039582,
+        "date": "9. 8. 오후 10:27",
+        "difficulty": "hard",
+        "p1Score": 61,
+        "aiScore": 124,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788873747433,
+        "date": "9. 8. 오후 10:22",
+        "difficulty": "hard",
+        "p1Score": 100,
+        "aiScore": 122,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
       {
         "id": 1788870606931,
         "date": "9. 8. 오후 09:30",
@@ -628,14 +764,6 @@
         "date": "9. 7. 오후 08:50",
         "p1Score": 206,
         "aiScore": 198,
-        "result": "승",
-        "failReason": "-"
-      },
-      {
-        "id": 1788778197553,
-        "date": "9. 7. 오후 07:49",
-        "p1Score": 271,
-        "aiScore": 160,
         "result": "승",
         "failReason": "-"
       }
