@@ -834,13 +834,38 @@ function decideAIHoldHard() {
 
     decideAIHoldMedium();
 }
-
 // ==========================================
-// 6. 히스토리 버저닝, 마이그레이션, 누적 저장 및 JSON 파일 다운로드
+// 6. 히스토리 버저닝, 마이그레이션, JSON 파일 연동 (서버/로컬)
 // ==========================================
 
 /**
- * 저장된 데이터 불러오기 및 스키마 검증 / 자동 마이그레이션
+ * 1) 페이지 접속 시 같은 경로의 yacht_history_v2.json 파일 자동 불러오기
+ */
+async function loadHistoryFromRemoteFile() {
+    try {
+        // GitHub Pages 및 상대 경로에서 JSON 데이터 패치
+        const response = await fetch('./yacht_history_v2.json', { cache: 'no-cache' });
+        if (!response.ok) return;
+
+        const remoteData = await response.json();
+        const localData = getPlayHistory();
+
+        // 가져온 데이터 스키마 확인
+        const targetData = remoteData.history ? remoteData.history : remoteData;
+        const validData = validateAndMigrate(targetData);
+
+        // 로컬스토리지에 데이터가 비어있거나, 서버의 데이터 버전/내용을 동기화해야 할 때 반영
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(validData));
+            renderHistoryTable(selectedDifficulty);
+        }
+    } catch (e) {
+        console.log('기본 JSON 파일이 없거나 불러오지 못했습니다. 로컬 데이터를 유지합니다.');
+    }
+}
+
+/**
+ * 2) 저장된 로컬스토리지 데이터 불러오기 및 검증
  */
 function getPlayHistory() {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -855,22 +880,7 @@ function getPlayHistory() {
 
     try {
         const parsed = JSON.parse(saved);
-
-        if (!parsed || typeof parsed !== 'object') return defaultData;
-
-        const storedVersion = Number(parsed.version) || 1;
-
-        // 버전에 맞추어 마이그레이션 처리
-        if (storedVersion < DATA_VERSION) {
-            return migrateHistoryData(parsed, defaultData);
-        }
-
-        return {
-            version: Math.max(storedVersion, DATA_VERSION),
-            easy: Array.isArray(parsed.easy) ? parsed.easy : [],
-            medium: Array.isArray(parsed.medium) ? parsed.medium : [],
-            hard: Array.isArray(parsed.hard) ? parsed.hard : []
-        };
+        return validateAndMigrate(parsed);
     } catch (e) {
         console.error('기록 로드 실패: 데이터를 초기화합니다.', e);
         return defaultData;
@@ -878,23 +888,24 @@ function getPlayHistory() {
 }
 
 /**
- * 이전 버전(v1) 데이터를 최신 버전(v2) 스키마 구조로 마이그레이션
+ * 3) 데이터 구조 검증 및 마이그레이션 함수
  */
-function migrateHistoryData(oldData, defaultData) {
-    const migrated = { ...defaultData, version: DATA_VERSION };
-    
-    ['easy', 'medium', 'hard'].forEach(diff => {
-        if (Array.isArray(oldData[diff])) {
-            migrated[diff] = oldData[diff];
-        }
-    });
+function validateAndMigrate(parsed) {
+    const defaultData = { version: DATA_VERSION, easy: [], medium: [], hard: [] };
+    if (!parsed || typeof parsed !== 'object') return defaultData;
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-    return migrated;
+    const storedVersion = Number(parsed.version) || 1;
+
+    return {
+        version: Math.max(storedVersion, DATA_VERSION),
+        easy: Array.isArray(parsed.easy) ? parsed.easy : [],
+        medium: Array.isArray(parsed.medium) ? parsed.medium : [],
+        hard: Array.isArray(parsed.hard) ? parsed.hard : []
+    };
 }
 
 /**
- * 게임 종료 시 매 판 플레이 이력을 누적 배열에 push 저장 (saveGameHistory)
+ * 4) 게임 종료 시 이력 저장 (saveGameHistory)
  */
 function saveGameHistory(diff, p1Score, aiScore, isVictory, failReason) {
     const historyData = getPlayHistory();
@@ -906,16 +917,12 @@ function saveGameHistory(diff, p1Score, aiScore, isVictory, failReason) {
         difficulty: diff,
         p1Score: p1Score || 0,
         aiScore: aiScore || 0,
-        p1ScoresDetail: p1Scores,
-        aiScoresDetail: aiScores,
         result: isVictory ? '승' : '패',
         failReason: isVictory ? '-' : failReason
     };
 
-    // 최신 기록을 배열 맨 앞에 누적
     historyData[diff].unshift(record);
 
-    // 각 난이도별 최대 10개까지 보존
     if (historyData[diff].length > 10) {
         historyData[diff] = historyData[diff].slice(0, 10);
     }
@@ -926,7 +933,31 @@ function saveGameHistory(diff, p1Score, aiScore, isVictory, failReason) {
 }
 
 /**
- * [기록 파일 저장하기] 버튼 클릭 시 누적된 전체 이력을 JSON 파일로 다운로드 (downloadHistoryFile)
+ * 5) JSON 파일 직접 업로드하여 불러오기 (importHistoryFile)
+ */
+function importHistoryFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            const targetData = parsed.history ? parsed.history : parsed;
+            const validData = validateAndMigrate(targetData);
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(validData));
+            renderHistoryTable(selectedDifficulty);
+            alert('기록 파일을 성공적으로 불러왔습니다!');
+        } catch (err) {
+            alert('올바르지 않은 JSON 파일 형식입니다.');
+        }
+    };
+    reader.readAsText(file);
+}
+
+/**
+ * 6) JSON 파일 다운로드 (downloadHistoryFile)
  */
 function downloadHistoryFile() {
     const historyData = getPlayHistory();
@@ -991,6 +1022,12 @@ function clearHistory(diff) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(historyData));
     renderHistoryTable(targetDiff);
 }
+
+// DOM 로드 완료 시 원격 파일 확인 및 테이블 렌더링
+document.addEventListener('DOMContentLoaded', () => {
+    loadHistoryFromRemoteFile();
+    renderHistoryTable(selectedDifficulty);
+});
 
 // ==========================================
 // 7. 게임 종료 및 모달
