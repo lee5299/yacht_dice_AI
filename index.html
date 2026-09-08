@@ -113,8 +113,9 @@
     </div>
 </div>
 
+<!-- 기록 보기 모달 부분 (index.html 내 일부) -->
 <div class="modal" id="history-modal" style="display: none; z-index: 600;">
-    <div class="modal-card-custom" style="max-width: 550px; width: 95%;">
+    <div class="modal-card-custom" style="max-width: 580px; width: 95%;">
         <h1>📋 난이도별 플레이 기록 (최대 10회)</h1>
         <div style="display: flex; gap: 8px; margin-bottom: 15px; justify-content: center;">
             <button class="diff-btn tab-btn active" data-diff="easy" onclick="renderHistoryTable('easy')">Easy</button>
@@ -135,8 +136,10 @@
                 <tbody id="history-tbody"></tbody>
             </table>
         </div>
-        <div style="display: flex; justify-content: space-between; gap: 10px;">
-            <button class="pause-btn" style="background:#dc2626;" onclick="clearCurrentHistoryTab()">🗑️ 현재 탭 기록 삭제</button>
+        <!-- 하단 버튼 영역: JSON 파일 저장 버튼 추가 -->
+        <div style="display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+            <button class="pause-btn" style="background:#10b981; color: white;" onclick="downloadHistoryFile()">💾 기록 파일 저장하기</button>
+            <button class="pause-btn" style="background:#dc2626; color: white;" onclick="clearCurrentHistoryTab()">🗑️ 현재 탭 삭제</button>
             <button class="diff-btn" style="width: auto; padding: 6px 20px;" onclick="closeHistoryModal()">닫기</button>
         </div>
     </div>
@@ -151,16 +154,27 @@
 </div>
 
 <script>
+    // 기록 열기 (타이머 일시 정지 및 난이도별 기록 로드)
     function openHistoryModal() {
-        document.getElementById('history-modal').style.display = 'flex';
+        if (typeof pauseTimer === 'function') pauseTimer();
+        const modal = document.getElementById('history-modal');
+        if (modal) modal.style.display = 'flex';
         renderHistoryTable(typeof selectedDifficulty !== 'undefined' ? selectedDifficulty : 'medium');
     }
+
+    // 기록 닫기 (타이머 재개)
     function closeHistoryModal() {
-        document.getElementById('history-modal').style.display = 'none';
+        const modal = document.getElementById('history-modal');
+        if (modal) modal.style.display = 'none';
+        if (typeof resumeTimer === 'function') resumeTimer();
     }
+
+    // 현재 선택된 탭 삭제
     function clearCurrentHistoryTab() {
         const activeTab = document.querySelector('.tab-btn.active');
-        if (activeTab) clearHistory(activeTab.getAttribute('data-diff'));
+        if (activeTab && typeof clearHistory === 'function') {
+            clearHistory(activeTab.getAttribute('data-diff'));
+        }
     }
 </script>
 <script src="script.js"></script>
