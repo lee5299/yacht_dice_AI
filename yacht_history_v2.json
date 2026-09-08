@@ -1,0 +1,644 @@
+{
+  "version": 2,
+  "exportedAt": "2026-09-08T12:54:32.276Z",
+  "history": {
+    "version": 2,
+    "easy": [
+      {
+        "id": 1788871122714,
+        "date": "9. 8. 오후 09:38",
+        "difficulty": "easy",
+        "p1Score": 45,
+        "aiScore": 107,
+        "p1ScoresDetail": {
+          "aces": {
+            "base": 2,
+            "bonus": 0,
+            "total": 2
+          },
+          "deuces": {
+            "base": 8,
+            "bonus": 0,
+            "total": 8
+          },
+          "threes": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fours": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "fives": {
+            "base": 5,
+            "bonus": 0,
+            "total": 5
+          },
+          "sixes": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "choice": {
+            "base": 21,
+            "bonus": 5,
+            "total": 26
+          },
+          "fourKind": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fullHouse": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "sStraight": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "lStraight": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "yacht": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "aiScoresDetail": {
+          "choice": {
+            "base": 24,
+            "bonus": 0,
+            "total": 24
+          },
+          "sixes": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "fours": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "sStraight": {
+            "base": 15,
+            "bonus": 0,
+            "total": 15
+          },
+          "lStraight": {
+            "base": 30,
+            "bonus": 0,
+            "total": 30
+          },
+          "fullHouse": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "deuces": {
+            "base": 2,
+            "bonus": 0,
+            "total": 2
+          },
+          "threes": {
+            "base": 3,
+            "bonus": 0,
+            "total": 3
+          },
+          "fives": {
+            "base": 5,
+            "bonus": 0,
+            "total": 5
+          },
+          "aces": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fourKind": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "yacht": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788781571639,
+        "date": "9. 7. 오후 08:46",
+        "p1Score": 221,
+        "aiScore": 69,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788781062665,
+        "date": "9. 7. 오후 08:37",
+        "p1Score": 275,
+        "aiScore": 130,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788780585283,
+        "date": "9. 7. 오후 08:29",
+        "p1Score": 165,
+        "aiScore": 77,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788778595122,
+        "date": "9. 7. 오후 07:56",
+        "p1Score": 206,
+        "aiScore": 72,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788445235764,
+        "date": "9. 3. 오후 11:20",
+        "p1Score": 195,
+        "aiScore": 99,
+        "result": "승",
+        "failReason": "-"
+      }
+    ],
+    "medium": [
+      {
+        "id": 1788872064333,
+        "date": "9. 8. 오후 09:54",
+        "difficulty": "medium",
+        "p1Score": 169,
+        "aiScore": 149,
+        "p1ScoresDetail": {
+          "yacht": {
+            "base": 50,
+            "bonus": 0,
+            "total": 50
+          },
+          "lStraight": {
+            "base": 30,
+            "bonus": 0,
+            "total": 30
+          },
+          "fives": {
+            "base": 20,
+            "bonus": 0,
+            "total": 20
+          },
+          "fours": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "threes": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "choice": {
+            "base": 18,
+            "bonus": 0,
+            "total": 18
+          },
+          "deuces": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "aces": {
+            "base": 2,
+            "bonus": 0,
+            "total": 2
+          },
+          "fullHouse": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "sStraight": {
+            "base": 15,
+            "bonus": 0,
+            "total": 15
+          },
+          "fourKind": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "sixes": {
+            "base": 6,
+            "bonus": 0,
+            "total": 6
+          }
+        },
+        "aiScoresDetail": {
+          "choice": {
+            "base": 15,
+            "bonus": 0,
+            "total": 15
+          },
+          "fourKind": {
+            "base": 27,
+            "bonus": 0,
+            "total": 27
+          },
+          "sStraight": {
+            "base": 15,
+            "bonus": 0,
+            "total": 15
+          },
+          "fullHouse": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "fives": {
+            "base": 10,
+            "bonus": 0,
+            "total": 10
+          },
+          "threes": {
+            "base": 3,
+            "bonus": 0,
+            "total": 3
+          },
+          "aces": {
+            "base": 3,
+            "bonus": 0,
+            "total": 3
+          },
+          "deuces": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "sixes": {
+            "base": 6,
+            "bonus": 0,
+            "total": 6
+          },
+          "yacht": {
+            "base": 50,
+            "bonus": 0,
+            "total": 50
+          },
+          "fours": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "lStraight": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788869026241,
+        "date": "9. 8. 오후 09:03",
+        "p1Score": 74,
+        "aiScore": 94,
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788778398690,
+        "date": "9. 7. 오후 07:53",
+        "p1Score": 219,
+        "aiScore": 96,
+        "result": "승",
+        "failReason": "-"
+      }
+    ],
+    "hard": [
+      {
+        "id": 1788870606931,
+        "date": "9. 8. 오후 09:30",
+        "difficulty": "hard",
+        "p1Score": 31,
+        "aiScore": 150,
+        "p1ScoresDetail": {
+          "aces": {
+            "base": 1,
+            "bonus": 0,
+            "total": 1
+          },
+          "deuces": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "threes": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fours": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fives": {
+            "base": 5,
+            "bonus": 0,
+            "total": 5
+          },
+          "sixes": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "choice": {
+            "base": 16,
+            "bonus": 5,
+            "total": 21
+          },
+          "fourKind": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fullHouse": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "sStraight": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "lStraight": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "yacht": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "aiScoresDetail": {
+          "choice": {
+            "base": 28,
+            "bonus": 5,
+            "total": 33
+          },
+          "fullHouse": {
+            "base": 21,
+            "bonus": 0,
+            "total": 21
+          },
+          "fourKind": {
+            "base": 25,
+            "bonus": 0,
+            "total": 25
+          },
+          "threes": {
+            "base": 6,
+            "bonus": 0,
+            "total": 6
+          },
+          "sixes": {
+            "base": 24,
+            "bonus": 0,
+            "total": 24
+          },
+          "fives": {
+            "base": 10,
+            "bonus": 0,
+            "total": 10
+          },
+          "deuces": {
+            "base": 8,
+            "bonus": 0,
+            "total": 8
+          },
+          "sStraight": {
+            "base": 15,
+            "bonus": 0,
+            "total": 15
+          },
+          "fours": {
+            "base": 8,
+            "bonus": 0,
+            "total": 8
+          },
+          "aces": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "lStraight": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "yacht": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "result": "패",
+        "failReason": "상단 보너스 또는 고득점 족보 달성 실패"
+      },
+      {
+        "id": 1788869940471,
+        "date": "9. 8. 오후 09:19",
+        "difficulty": "hard",
+        "p1Score": 198,
+        "aiScore": 142,
+        "p1ScoresDetail": {
+          "sStraight": {
+            "base": 15,
+            "bonus": 0,
+            "total": 15
+          },
+          "lStraight": {
+            "base": 30,
+            "bonus": 0,
+            "total": 30
+          },
+          "fours": {
+            "base": 16,
+            "bonus": 0,
+            "total": 16
+          },
+          "deuces": {
+            "base": 8,
+            "bonus": 0,
+            "total": 8
+          },
+          "aces": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "choice": {
+            "base": 23,
+            "bonus": 0,
+            "total": 23
+          },
+          "threes": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "yacht": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "fourKind": {
+            "base": 21,
+            "bonus": 0,
+            "total": 21
+          },
+          "sixes": {
+            "base": 24,
+            "bonus": 0,
+            "total": 24
+          },
+          "fives": {
+            "base": 10,
+            "bonus": 0,
+            "total": 10
+          },
+          "fullHouse": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "aiScoresDetail": {
+          "fourKind": {
+            "base": 8,
+            "bonus": 5,
+            "total": 13
+          },
+          "choice": {
+            "base": 21,
+            "bonus": 0,
+            "total": 21
+          },
+          "sStraight": {
+            "base": 15,
+            "bonus": 5,
+            "total": 20
+          },
+          "fives": {
+            "base": 20,
+            "bonus": 0,
+            "total": 20
+          },
+          "fours": {
+            "base": 16,
+            "bonus": 0,
+            "total": 16
+          },
+          "lStraight": {
+            "base": 30,
+            "bonus": 0,
+            "total": 30
+          },
+          "threes": {
+            "base": 12,
+            "bonus": 0,
+            "total": 12
+          },
+          "sixes": {
+            "base": 6,
+            "bonus": 0,
+            "total": 6
+          },
+          "aces": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "deuces": {
+            "base": 4,
+            "bonus": 0,
+            "total": 4
+          },
+          "fullHouse": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "yacht": {
+            "base": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788869769584,
+        "date": "9. 8. 오후 09:16",
+        "difficulty": "hard",
+        "p1Score": 0,
+        "aiScore": 0,
+        "p1ScoresDetail": {},
+        "aiScoresDetail": {},
+        "result": "패",
+        "failReason": "제한시간 30초 초과"
+      },
+      {
+        "id": 1788869215113,
+        "date": "9. 8. 오후 09:06",
+        "p1Score": 190,
+        "aiScore": 139,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788868480461,
+        "date": "9. 8. 오후 08:54",
+        "p1Score": 168,
+        "aiScore": 91,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788781823135,
+        "date": "9. 7. 오후 08:50",
+        "p1Score": 206,
+        "aiScore": 198,
+        "result": "승",
+        "failReason": "-"
+      },
+      {
+        "id": 1788778197553,
+        "date": "9. 7. 오후 07:49",
+        "p1Score": 271,
+        "aiScore": 160,
+        "result": "승",
+        "failReason": "-"
+      }
+    ]
+  }
+}

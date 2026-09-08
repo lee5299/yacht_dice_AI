@@ -1,3 +1,9 @@
+// ==========================================
+// 1. 상수 및 버저닝 설정
+// ==========================================
+const DATA_VERSION = 2; // 데이터 스키마 버전
+const STORAGE_KEY = 'yacht_play_history';
+
 const CATEGORIES = [
     'aces', 'deuces', 'threes', 'fours', 'fives', 'sixes',
     'choice', 'fourKind', 'fullHouse', 'sStraight', 'lStraight', 'yacht'
@@ -14,12 +20,12 @@ const ALL_SKILLS = [
     { id: 'free_10_pts', title: '🛡️ 프리 10점 (1회)', desc: '비어있는 원하는 칸 1곳에 무조건 10점을 확정 입력' }
 ];
 
+// ==========================================
+// 2. 게임 상태 변수
+// ==========================================
 let selectedDifficulty = 'medium';
-
-// 연타/중복 클릭 방지 락 (T02-C12)
 let isActionLocked = false;
 
-// 타이머 및 일시정지 상태 (T02-C14, T02-C15)
 let timerInterval = null;
 let timeLeft = 30;
 let isPaused = false;
@@ -45,7 +51,12 @@ let currentRound = 1;
 let p1Scores = {};
 let aiScores = {};
 
-// 포커스 이탈/복귀 감지 (T02-C14)
+let isMuted = false;
+let isReduceMotion = false;
+
+// ==========================================
+// 3. 포커스 이탈/복귀 및 기본 이벤트
+// ==========================================
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         if (timerInterval) stopTimer();
@@ -83,7 +94,7 @@ function showSkillSelection() {
 
     options.forEach(skill => {
         const btn = document.createElement('button');
-        btn.className = 'skill-btn';
+        btn.className = 'skill-btn float-effect';
         btn.innerHTML = `<span class="skill-title">${skill.title}</span><span class="skill-desc">${skill.desc}</span>`;
         btn.onclick = () => chooseSkill(skill);
         container.appendChild(btn);
@@ -145,13 +156,6 @@ function startTimer() {
     }, 1000);
 }
 
-function resetTimer() {
-    if (isPlayerTurn && !isPaused) {
-        timeLeft = 30;
-        updateTimerUI();
-    }
-}
-
 function stopTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
@@ -166,6 +170,9 @@ function updateTimerUI() {
     }
 }
 
+// ==========================================
+// 4. 게임 초기화 및 제어
+// ==========================================
 function initGame() {
     p1Scores = {};
     aiScores = {};
@@ -201,6 +208,10 @@ function initGame() {
     const skillBtn = document.getElementById('skill-use-btn');
     skillBtn.style.display = 'none';
     skillBtn.disabled = false;
+
+    const rollBtn = document.getElementById('roll-btn');
+    if (rollBtn) rollBtn.classList.add('float-effect');
+    if (skillBtn) skillBtn.classList.add('float-effect');
 
     if (p1Skill) {
         document.getElementById('p1-skill-info').innerText = `P: ${p1Skill.title}`;
@@ -264,7 +275,7 @@ function createDiceUI(count) {
 
     for (let i = 0; i < count; i++) {
         const diceEl = document.createElement('div');
-        diceEl.className = 'dice-2d';
+        diceEl.className = 'dice-2d float-effect';
         diceEl.id = `dice-${i}`;
         diceEl.setAttribute('data-val', dice[i]);
         diceEl.onclick = () => toggleHold(i);
@@ -280,7 +291,6 @@ function createDiceUI(count) {
 
 function toggleHold(index) {
     if (isPlayerTurn && rollsLeft < 3 && !isRolling && !isActionLocked) {
-        resetTimer();
         held[index] = !held[index];
         const diceEl = document.getElementById(`dice-${index}`);
         if (diceEl) diceEl.classList.toggle('held', held[index]);
@@ -353,14 +363,11 @@ function sortDiceWithHold() {
 
 function playerRoll() {
     if (!isPlayerTurn || isActionLocked) return;
-    resetTimer();
     rollDice();
 }
 
 function useActiveSkill() {
     if (!isPlayerTurn || isRolling || isActionLocked || !p1Skill) return;
-
-    resetTimer();
 
     if (p1Skill.id === 'extra_roll') {
         if (rollsLeft > 0 || p1SkillUsedCount >= 2 || p1UsedExtraRollThisTurn) return;
@@ -519,7 +526,6 @@ function selectScoreCategory(catId) {
 }
 
 function endTurn() {
-    // 턴이 끝날 때 이번 턴이 6주사위 턴이었거나 주사위가 5개가 아니면 무조건 5개로 초기화
     if (is6DiceTurn || dice.length !== 5) {
         is6DiceTurn = false;
         createDiceUI(5);
@@ -563,10 +569,12 @@ function updateTurnUI() {
     rollBtn.innerText = isPlayerTurn ? 'ROLL' : 'AI TURN...';
 }
 
+// ==========================================
+// 5. AI 로직
+// ==========================================
 function playAITurn() {
     isActionLocked = false;
 
-    // AI가 6주사위 스킬을 사용하는 경우 처리
     if (aiSkill && aiSkill.id === 'dice_6_roll' && aiSkillUsedCount === 0) {
         aiSkillUsedCount = 1;
         is6DiceTurn = true;
@@ -827,57 +835,126 @@ function decideAIHoldHard() {
     decideAIHoldMedium();
 }
 
-function openHistoryModal() {
-    pauseTimer();
-    renderHistoryTable(selectedDifficulty);
-    const modal = document.getElementById('history-modal');
-    if (modal) modal.style.display = 'flex';
-}
+// ==========================================
+// 6. 히스토리 버저닝, 마이그레이션, 누적 저장 및 JSON 파일 다운로드
+// ==========================================
 
-function closeHistoryModal() {
-    const modal = document.getElementById('history-modal');
-    if (modal) modal.style.display = 'none';
-    resumeTimer();
-}
-
+/**
+ * 저장된 데이터 불러오기 및 스키마 검증 / 자동 마이그레이션
+ */
 function getPlayHistory() {
-    const saved = localStorage.getItem('yacht_play_history');
-    if (saved) {
-        try {
-            return JSON.parse(saved);
-        } catch (e) {
-            console.error('기록 로드 실패', e);
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const defaultData = {
+        version: DATA_VERSION,
+        easy: [],
+        medium: [],
+        hard: []
+    };
+
+    if (!saved) return defaultData;
+
+    try {
+        const parsed = JSON.parse(saved);
+
+        if (!parsed || typeof parsed !== 'object') return defaultData;
+
+        const storedVersion = Number(parsed.version) || 1;
+
+        // 버전에 맞추어 마이그레이션 처리
+        if (storedVersion < DATA_VERSION) {
+            return migrateHistoryData(parsed, defaultData);
         }
+
+        return {
+            version: Math.max(storedVersion, DATA_VERSION),
+            easy: Array.isArray(parsed.easy) ? parsed.easy : [],
+            medium: Array.isArray(parsed.medium) ? parsed.medium : [],
+            hard: Array.isArray(parsed.hard) ? parsed.hard : []
+        };
+    } catch (e) {
+        console.error('기록 로드 실패: 데이터를 초기화합니다.', e);
+        return defaultData;
     }
-    return { easy: [], medium: [], hard: [] };
 }
 
-function savePlayRecord(diff, p1Score, aiScore, isVictory, failReason) {
-    const history = getPlayHistory();
-    if (!history[diff]) history[diff] = [];
+/**
+ * 이전 버전(v1) 데이터를 최신 버전(v2) 스키마 구조로 마이그레이션
+ */
+function migrateHistoryData(oldData, defaultData) {
+    const migrated = { ...defaultData, version: DATA_VERSION };
+    
+    ['easy', 'medium', 'hard'].forEach(diff => {
+        if (Array.isArray(oldData[diff])) {
+            migrated[diff] = oldData[diff];
+        }
+    });
 
-    const newRecord = {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+    return migrated;
+}
+
+/**
+ * 게임 종료 시 매 판 플레이 이력을 누적 배열에 push 저장 (saveGameHistory)
+ */
+function saveGameHistory(diff, p1Score, aiScore, isVictory, failReason) {
+    const historyData = getPlayHistory();
+    if (!historyData[diff]) historyData[diff] = [];
+
+    const record = {
         id: Date.now(),
         date: new Date().toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        p1Score: p1Score,
-        aiScore: aiScore,
+        difficulty: diff,
+        p1Score: p1Score || 0,
+        aiScore: aiScore || 0,
+        p1ScoresDetail: p1Scores,
+        aiScoresDetail: aiScores,
         result: isVictory ? '승' : '패',
         failReason: isVictory ? '-' : failReason
     };
 
-    history[diff].unshift(newRecord);
+    // 최신 기록을 배열 맨 앞에 누적
+    historyData[diff].unshift(record);
 
-    if (history[diff].length > 10) {
-        history[diff] = history[diff].slice(0, 10);
+    // 각 난이도별 최대 10개까지 보존
+    if (historyData[diff].length > 10) {
+        historyData[diff] = historyData[diff].slice(0, 10);
     }
 
-    localStorage.setItem('yacht_play_history', JSON.stringify(history));
+    historyData.version = DATA_VERSION;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(historyData));
     renderHistoryTable(diff);
 }
 
+/**
+ * [기록 파일 저장하기] 버튼 클릭 시 누적된 전체 이력을 JSON 파일로 다운로드 (downloadHistoryFile)
+ */
+function downloadHistoryFile() {
+    const historyData = getPlayHistory();
+    
+    const exportPayload = {
+        version: DATA_VERSION,
+        exportedAt: new Date().toISOString(),
+        history: historyData
+    };
+
+    const jsonString = JSON.stringify(exportPayload, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.href = url;
+    downloadAnchor.download = `yacht_history_v${DATA_VERSION}.json`;
+    
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    
+    document.body.removeChild(downloadAnchor);
+    URL.revokeObjectURL(url);
+}
+
 function renderHistoryTable(diff) {
-    const history = getPlayHistory();
-    const records = history[diff] || [];
+    const historyData = getPlayHistory();
+    const records = historyData[diff] || [];
     const tbody = document.getElementById('history-tbody');
     if (!tbody) return;
 
@@ -909,12 +986,15 @@ function renderHistoryTable(diff) {
 function clearHistory(diff) {
     const targetDiff = diff || selectedDifficulty;
     if (!confirm(`${targetDiff.toUpperCase()} 난이도 기록을 모두 삭제하시겠습니까?`)) return;
-    const history = getPlayHistory();
-    history[targetDiff] = [];
-    localStorage.setItem('yacht_play_history', JSON.stringify(history));
+    const historyData = getPlayHistory();
+    historyData[targetDiff] = [];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(historyData));
     renderHistoryTable(targetDiff);
 }
 
+// ==========================================
+// 7. 게임 종료 및 모달
+// ==========================================
 function gameOver(isTimeout = false) {
     stopTimer();
 
@@ -948,7 +1028,8 @@ function gameOver(isTimeout = false) {
         failReason = '동점 무승부';
     }
 
-    savePlayRecord(selectedDifficulty, p1Total, aiTotal, isVictory, failReason);
+    // 게임 종료 시 누적 이력 저장
+    saveGameHistory(selectedDifficulty, p1Total, aiTotal, isVictory, failReason);
 
     if (modal) modal.style.display = 'flex';
 }
@@ -962,9 +1043,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderHistoryTable(selectedDifficulty);
 });
 
-let isMuted = false;
-let isReduceMotion = false;
-
+// ==========================================
+// 8. 사운드 및 모션 효과 토글
+// ==========================================
 function toggleSound() {
     isMuted = !isMuted;
     const btn = document.getElementById('sound-toggle-btn');
